@@ -7,12 +7,12 @@ Checklist
 ----------------------------------
 [ done ] Compiles.
 
-[ ] Program contains all loop constructs supported by the language.
+[ done ] Program contains all loop constructs supported by the language.
 
 [ done ] Declaration, assignment, and printing for at least 3 supported datatypes in Rust.
 
 [ done ] String Declaration, assignment, and concatenation in Rust.
 [ ] Declare and use a Rust module.
 
-[ ] Declaration and usage of multi parameter functions with return values in Rust.
+[ done ] Declaration and usage of multi parameter functions with return values in Rust.
 [ ] Something special.
