@@ -1,4 +1,15 @@
 fn main() {
+
+    /*
+        Code Reorganization
+        
+        Ideas for mods: menu, food, financial
+
+        Create a navigation menu
+        Ask for user input
+        Perform user input
+    */
+
     let first_name = "Tim";
     let last_name = "The";
 
@@ -63,7 +74,7 @@ fn main() {
     println!("'while let' loop completed.");
     const TAX_RATE: f64 = 0.0875;
 
-    //I tried a 'LabelBlockExpression loop, but idk if I did it correctly.
+    //I tried a 'LabelBlockExpression' loop, but idk if I did it correctly.
     let receipt = 'block: {
         
         if tacos_eaten == 0 {
@@ -77,7 +88,8 @@ fn main() {
         println!("==========================\nTotal:\t\t ${:.2}\n==========================", total_amount);
         3
     };
-
+    
+    menu::start();
 }
 
 fn add_taco(mut tacos_eaten: i32) -> i32 {
@@ -94,4 +106,48 @@ fn print_receipt(tacos_eaten: i32, TAX_RATE: f64, mut total_amount: f64) -> f64 
 
     total_amount = bill + tax;
     return total_amount
+}
+
+mod menu {
+    use std::io;
+    
+    pub fn start() {
+        
+        greeting();
+        let mut menu_select = get_menu();
+        let mut valid = validity(&menu_select);
+        if !valid {
+            println!("Invalid selection. Try again.");
+            start();
+        }
+    
+    }
+    
+    fn greeting() {
+
+        println!("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \
+        \nWelcome to Crash's Food Extravaganza! \
+        \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \
+        \nInput desired menu selection \
+        \n[1] Dining in \
+        \n[2] Carryout \
+        \n[3] Delivery \
+        \n[0] Exit");
+        //I find println! with long strings to be very annoying
+        //trying to get them into a readable format
+                //without having funky indentations like this.
+        //*I think I figured it out.*
+    }
+
+    fn get_menu() -> String {
+        let mut input = String::new();
+        io::stdin().read_line(&mut input);
+        return input.trim().to_string();
+    }
+
+    fn validity(menu_select: &str) -> bool {
+        matches!(menu_select, "1" | "2" | "3" | "0")
+        //This is weird.
+        //I'm used to if(foo == value1 || foo2 == value2){}
+    }
 }
