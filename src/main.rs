@@ -3,11 +3,15 @@ fn main() {
     /*
         Code Reorganization
         
-        Ideas for mods: menu, food, financial
+        Ideas for mods: menu, dine_in_menu, carryout_menu, delivery_menu, food, financial
 
-        Create a navigation menu
-        Ask for user input
-        Perform user input
+        Create a navigation menu (done)
+        Ask for user input (done)
+        Perform user input (done)
+
+        Next: consider additional sub-menu implementation for dinein, carryout, and delivery.
+
+        TO-DO: Reorganize spaghetti.
     */
 
     let first_name = "Tim";
@@ -42,7 +46,6 @@ fn main() {
         else {
             println!("'while' condition fulfilled.\n");
             nothing_creative = false;
-            
         }
     }
 
@@ -75,20 +78,11 @@ fn main() {
     const TAX_RATE: f64 = 0.0875;
 
     //I tried a 'LabelBlockExpression' loop, but idk if I did it correctly.
-    let receipt = 'block: {
-        
-        if tacos_eaten == 0 {
-            break 'block 1;
-        }
-        if tacos_eaten < 0 {
-            break 'block 2;
-        }
-        let mut total_amount: f64 = 0.00;
-        total_amount = print_receipt(tacos_eaten, TAX_RATE, total_amount);
-        println!("==========================\nTotal:\t\t ${:.2}\n==========================", total_amount);
-        3
-    };
-    
+    //*I removed it. Logic was unnecessary and didn't do anything.*
+    let mut total_amount: f64 = 0.00;
+    total_amount = print_receipt(tacos_eaten, TAX_RATE, total_amount);
+    println!("==========================\nTotal:\t\t ${:.2}\n==========================", total_amount);
+
     menu::start();
 }
 
@@ -98,6 +92,16 @@ fn add_taco(mut tacos_eaten: i32) -> i32 {
 }
 
 fn print_receipt(tacos_eaten: i32, TAX_RATE: f64, mut total_amount: f64) -> f64 {
+    //I don't know why it's telling me to use snake case for TAX_RATE
+    //Technically I did, it's just a const though, so it should be all caps.
+    //These warnings and suggestions are annoying at times, helpful for other stuff though.
+    //According to documentation
+    /*
+    https://doc.rust-lang.org/std/keyword.const.html
+    "Constants, like statics, should always be in SCREAMING_SNAKE_CASE."
+    If it's literally in the documentation, why is it giving me a warning for doing what it's telling me to do???
+    /end_rant
+    */
     let price_taco = 2.99;
     let bill = price_taco * (tacos_eaten as f64);
     let tax = bill * TAX_RATE;
@@ -113,14 +117,40 @@ mod menu {
     
     pub fn start() {
         
-        greeting();
-        let mut menu_select = get_menu();
-        let mut valid = validity(&menu_select);
-        if !valid {
-            println!("Invalid selection. Try again.");
-            start();
+        'main_menu: loop {
+            greeting();
+            let mut menu_select = get_menu();
+            //It's annoying getting so many warning messages about mut.
+            //I know it doesn't currently need to be mut.
+            //But I think it may need to be in the near future.
+            //Is there a way to toggle warnings on/off?
+            if validity(&menu_select) {
+                match menu_select.as_str() {
+                    //It's very annoying to constantly have to keep track of String and &str
+                    "1" => {
+                        println!("\nYou selected 'Dining in'.");
+                        println!("\nFunctionality coming soon!");
+                    },
+                    "2" => {
+                        println!("\nYou selected 'Carryout'.");
+                        println!("\nFunctionality coming soon!");
+                    },
+                    "3" => {
+                        println!("\nYou selected 'Delivery'.");
+                        println!("\nFunctionality coming soon!");
+                    },
+                    "0" => {
+                        println!("\nYou selected 'Exit'.");
+                        break 'main_menu;
+                    },
+                    _ => unreachable!(),
+                }
+                break 'main_menu;
+            }
+            else {
+                println!("Invalid selection. Try again.");
+            }
         }
-    
     }
     
     fn greeting() {
@@ -141,7 +171,7 @@ mod menu {
 
     fn get_menu() -> String {
         let mut input = String::new();
-        io::stdin().read_line(&mut input);
+        let _ = io::stdin().read_line(&mut input);
         return input.trim().to_string();
     }
 
